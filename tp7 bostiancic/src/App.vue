@@ -1,32 +1,41 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Agregar</router-link> |
-      <router-link to="/list">Listar</router-link> |
-      
-    </div>
-    <router-view/>
+    <el-container>
+      <el-header>
+        <div id="nav">
+          <router-link to="/">Agregar</router-link> |
+          <router-link to="/list">Listar</router-link> |
+        
+        </div>
+      </el-header>
+        <el-main>
+         <router-view/>
+        </el-main>
+    </el-container>
+  
   </div>
 </template>
 
 <script>
 export default {
-  name: 'app',
+  name: "app",
   data() {
-    return {
-    }
+    return {};
   }
-}
+};
 </script>
 
 
 <style>
 #app {
+  /*
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  
   color: #2c3e50;
+  */
+  text-align: center;
 }
 #nav {
   padding: 30px;
