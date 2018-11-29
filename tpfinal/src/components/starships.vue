@@ -1,25 +1,30 @@
 <template>
   <div>
-    <div v-if="loading">
-      <loader></loader>
+    <div v-if="!error">
+      <div v-if="loading">
+        <loader></loader>
+      </div>
+      <div v-if="!loading">
+        <el-table v-if="starships.length" :data="starships">
+          <el-table-column prop="name" label="Nombre" width="180"></el-table-column>
+          <el-table-column prop="model" label="model" width="180"></el-table-column>
+          <el-table-column prop="manufacturer" label="manufacturer"></el-table-column>
+          <el-table-column prop="cost_in_credits" label="cost_in_credits"></el-table-column>
+          <el-table-column prop="length" label="length"></el-table-column>
+          <el-table-column prop="max_atmosphering_speed" label="max_atmosphering_speed"></el-table-column>
+        </el-table>
+        <p v-else>Empty List</p>
+
+        <el-button type="primary" @click="getStarships(1)" round><</el-button>
+        <a v-for="page in pages">
+          <el-button type="info" @click="getStarships(page)" circle>{{ page }}</el-button>
+        </a>
+        <el-button type="primary" @click="getStarships(numberOfPages)" round>></el-button>
+      </div>
     </div>
-
-    <el-table v-if="starships.length" :data="starships">
-      <el-table-column prop="name" label="Nombre" width="180"></el-table-column>
-      <el-table-column prop="model" label="model" width="180"></el-table-column>
-      <el-table-column prop="manufacturer" label="manufacturer"></el-table-column>
-      <el-table-column prop="cost_in_credits" label="cost_in_credits"></el-table-column>
-      <el-table-column prop="length" label="length"></el-table-column>
-      <el-table-column prop="max_atmosphering_speed" label="max_atmosphering_speed"></el-table-column>
-    </el-table>
-    <p v-else>Lista vacía</p>
-
-    <el-button type="primary" @click="getStarships(1)" round>Anterior</el-button>
-    <a v-for="page in pages">
-      <a type="success" @click="getStarships(page)" round>{{ page }}</a>
-    </a>
-    <el-button type="success" @click="getStarships(numberOfPages)" round>Siguiente</el-button>
-    
+    <div v-if="error">
+      <atat></atat>
+    </div>
   </div>
 </template>
 
@@ -40,6 +45,7 @@ export default {
       starships: [],
       numberOfPages: 0,
       loading: true,
+      error: false,
       pages: []
     };
   },
@@ -61,9 +67,11 @@ export default {
           this.makeArrayPages();
           this.starships = response.data.results;
           this.loading = false;
+          this.error = false;
         })
         .catch(error => {
           this.loading = false;
+          this.error = true;
         });
     },
     makeArrayPages() {

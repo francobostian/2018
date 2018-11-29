@@ -1,4 +1,10 @@
 <template>
+	<div>
+		<div>
+		<h1 style="text-align:center;">
+	      Call Obi Wan! An error happened.. :(
+	   </h1>
+	</div>
 	<div id="wrapper">
 			<div id="outline" class="centering" >
 				<div class="base">
@@ -1621,7 +1627,7 @@ C89.825,74.964,96,62.205,96,48z"></path>
 				</div>
 			</div>
 		</div>
-
+</div>
 </template>
 
 <script>

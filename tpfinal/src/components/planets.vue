@@ -1,34 +1,37 @@
 <template>
   <div>
-    <div v-if="loading">
-      <loader></loader>
+    <div v-if="!error">
+      <div v-if="loading">
+        <loader></loader>
+      </div>
+      <div v-if="!loading">
+        <el-table v-if="planets.length" :data="planets">
+          <el-table-column prop="name" label="Nombre" width="180"></el-table-column>
+          <el-table-column prop="rotation_period" label="rotation_period" width="180"></el-table-column>
+          <el-table-column prop="orbital_period" label="orbital_period"></el-table-column>
+          <el-table-column prop="diameter" label="diameter"></el-table-column>
+          <el-table-column prop="climate" label="climate"></el-table-column>
+          <el-table-column prop="gravity" label="gravity"></el-table-column>
+          <el-table-column label="Films starring">
+            <template slot-scope="scope">
+              <el-button type="primary" @click="getId(scope.row.url)">
+                <i class>See More</i>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <p v-else>Empty List</p>
+
+        <el-button type="primary" @click="getPlanets(1)" round><</el-button>
+        <a v-for="page in pages">
+          <el-button type="info" @click="getPlanets(page)" circle>{{ page }}</el-button>
+        </a>
+        <el-button type="primary" @click="getPlanets(numberOfPages)" round>></el-button>
+      </div>
     </div>
-    <el-table v-if="planets.length" :data="planets">
-      <el-table-column prop="name" label="Nombre" width="180"></el-table-column>
-      <el-table-column prop="rotation_period" label="rotation_period" width="180"></el-table-column>
-      <el-table-column prop="orbital_period" label="orbital_period"></el-table-column>
-      <el-table-column prop="diameter" label="diameter"></el-table-column>
-      <el-table-column prop="climate" label="climate"></el-table-column>
-      <el-table-column prop="gravity" label="gravity"></el-table-column>
-      <el-table-column label="En q peli aparece?">
-        <template slot-scope="scope">
-          <el-button type="primary" @click="getId(scope.row.url)">
-            <i class></i>ver mas
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <p v-else>Lista vacía</p>
-
-    <el-button type="primary" @click="getPlanets(1)" round>First</el-button>
-
-    <a v-for="page in pages">
-      <a type="success" @click="getPlanets(page)" round>{{ page }}</a>
-    </a>
-
-    <el-button type="success" @click="getPlanets(numberOfPages)" round>Last</el-button>
-
-    
+    <div v-if="error">
+      <atat></atat>
+    </div>
   </div>
 </template>
 
@@ -48,7 +51,8 @@ export default {
       planets: [],
       pages: [],
       numberOfPages: 0,
-      loading: true
+      loading: true,
+      error: false
     };
   },
   computed: {},
@@ -80,9 +84,11 @@ export default {
           this.makeArrayPages();
           this.planets = response.data.results;
           this.loading = false;
+          this.error = false;
         })
         .catch(error => {
           this.loading = false;
+          this.error = true;
         });
     },
     makeArrayPages() {

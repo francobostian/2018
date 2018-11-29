@@ -1,5 +1,10 @@
 <template>
 	<section>
+		<div>
+		<h1 style="text-align:center;">
+	      The empire is attacking your internet! An error happened.. :(
+	   </h1>
+	</div>
 			<div class="at-at">
 		      <div class="at-at-content">
 		        <div class="at-at-body">

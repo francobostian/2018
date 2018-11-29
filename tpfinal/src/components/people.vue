@@ -1,34 +1,37 @@
 <template>
   <div>
-    <div v-if="loading">
-      <loader></loader>
+    <div v-if="!error">
+      <div v-if="loading">
+        <loader></loader>
+      </div>
+      <div v-if="!loading">
+        <el-table v-if="allPeople.length" :data="allPeople">
+          <el-table-column prop="name" label="Name" width="180"></el-table-column>
+          <el-table-column prop="gender" label="Sex" width="180"></el-table-column>
+          <el-table-column prop="mass" label="Mass"></el-table-column>
+          <el-table-column prop="hair_color" label="Hair color"></el-table-column>
+          <el-table-column prop="birth_year" label="Born"></el-table-column>
+
+          <el-table-column label="+ Info">
+            <template slot-scope="scope">
+              <el-button type="primary" @click="getId(scope.row.url)">
+                <i class>More info</i>
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+        <p v-else>Empty List</p>
+
+        <el-button type="primary" @click="getPeople(1)" round><</el-button>
+        <a v-for="page in pages">
+          <el-button type="info" @click="getPeople(page)" circle>{{ page }}</el-button>
+        </a>
+        <el-button type="primary" @click="getPeople(numberOfPages)" round>></el-button>
+      </div>
     </div>
-
-    <el-table v-if="allPeople.length" :data="allPeople">
-      <el-table-column prop="name" label="Nombre" width="180"></el-table-column>
-      <el-table-column prop="gender" label="Sexo" width="180"></el-table-column>
-      <el-table-column prop="mass" label="Masa"></el-table-column>
-      <el-table-column prop="hair_color" label="color de pelo"></el-table-column>
-      <el-table-column prop="birth_year" label="nacimiento"></el-table-column>
-
-      <el-table-column label="+ informacion">
-        <template slot-scope="scope">
-          <el-button type="primary" @click="getId(scope.row.url)">
-            <i class>Mas info</i>
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <p v-else>Lista vacía</p>
-
-    <el-button type="primary" @click="getPeople(1)" round>Anterior</el-button>
-    <a v-for="page in pages">
-      <a type="success" @click="getPeople(page)" round>{{ page }}</a>
-    </a>
-    <el-button type="success" @click="getPeople(numberOfPages)" round>Siguiente</el-button>
-
-    <rTwo></rTwo>
-   
+    <div v-if="error">
+      <rTwo></rTwo>
+    </div>
   </div>
 </template>
 
@@ -50,9 +53,11 @@ export default {
       pages: [],
       allPeople: [],
       numberOfPages: 0,
-      loading: true
+      loading: true,
+      error: false
     };
   },
+  computed: {},
   methods: {
     initializer() {
       this.pages = [];
@@ -75,6 +80,7 @@ export default {
       this.$http
         .get(urls.baseInfoSearch + "people/?page=" + index)
         .then(response => {
+          this.error = false;
           this.loading = false;
           this.allPeople = response.data.results;
           this.numberOfPages = Math.ceil(response.data.count / 10);
@@ -82,6 +88,7 @@ export default {
         })
         .catch(error => {
           this.loading = false;
+          this.error = true;
         });
     },
     makeArrayPages() {
